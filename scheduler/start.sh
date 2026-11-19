@@ -9,7 +9,9 @@ cd /home/frappe/frappe-bench
 : "${REDIS_CACHE_URL:?REDIS_CACHE_URL is required}"
 : "${REDIS_QUEUE_URL:?REDIS_QUEUE_URL is required}"
 SITE="${SITE_NAME:-helpdesk.local}"
-mkdir -p "sites/$SITE" config
+# Frappe writes per-site logs under sites/<site>/logs; without the folder the scheduler's
+# enqueue step fails silently on every tick.
+mkdir -p "sites/$SITE/logs" config
 env/bin/python - "$SITE" <<'PY'
 import json, os, sys
 site = sys.argv[1]
